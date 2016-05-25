@@ -17,7 +17,7 @@ class RandomBot : Bot {
 
     override fun move(data: Data): String {
         if (data.game.turn == 0) {
-            getDesktop().browse(URI(data.viewUrl))
+            Thread { getDesktop().browse(URI(data.viewUrl)) }.start()
         }
 
         return MOVES.random()
