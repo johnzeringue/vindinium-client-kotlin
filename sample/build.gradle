@@ -1,0 +1,7 @@
+apply plugin: "application"
+
+mainClassName = "io.zeringue.vindinium.sample.Main"
+
+dependencies {
+    compile project(":client")
+}

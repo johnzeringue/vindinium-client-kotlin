@@ -1,0 +1,4 @@
+rootProject.name = 'vindinium'
+
+include 'client'
+include 'sample'

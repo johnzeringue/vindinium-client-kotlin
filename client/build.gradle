@@ -1,0 +1,26 @@
+apply plugin: "maven"
+apply plugin: "org.jetbrains.dokka"
+
+dependencies {
+    compile "org.glassfish.jersey.core:jersey-client:2.22.2"
+    compile "org.glassfish.jersey.media:jersey-media-json-jackson:2.22.2"
+}
+
+dokka {
+    outputFormat = "javadoc"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: dokka) {
+    classifier = "javadoc"
+    from dokka.outputDirectory
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
