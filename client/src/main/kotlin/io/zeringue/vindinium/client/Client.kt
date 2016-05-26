@@ -1,5 +1,6 @@
 package io.zeringue.vindinium.client
 
+import javax.ws.rs.ProcessingException
 import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
@@ -45,10 +46,15 @@ class Client(val key: String) {
         while (!data.game.finished) {
             val move = bot.move(data)
 
-            response = moveTarget
-                    .queryParam("dir", move)
-                    .request(APPLICATION_JSON)
-                    .post(null)
+            try {
+                response = moveTarget
+                        .queryParam("dir", move)
+                        .request(APPLICATION_JSON)
+                        .post(null)
+            } catch (ex: ProcessingException) {
+                println(ex.message)
+                continue
+            }
 
             if (response.status != 200) {
                 println(response.readEntity(String::class.java))
