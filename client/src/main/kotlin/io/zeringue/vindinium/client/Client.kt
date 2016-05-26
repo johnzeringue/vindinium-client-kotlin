@@ -1,6 +1,5 @@
 package io.zeringue.vindinium.client
 
-import org.glassfish.jersey.client.ClientProperties.READ_TIMEOUT
 import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
@@ -13,7 +12,6 @@ class Client(val key: String) {
 
     private fun target(url: String) = ClientBuilder
             .newClient()
-            .property(READ_TIMEOUT, 10000)
             .target(url)
             .queryParam("key", key)
 
