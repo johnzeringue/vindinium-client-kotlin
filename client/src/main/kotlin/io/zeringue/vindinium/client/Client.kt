@@ -34,6 +34,7 @@ class Client(val key: String) {
      */
     fun play(bot: Bot, url: String): Data {
         val initialTarget = target(url)
+        var failures = 0
 
         var response = initialTarget
                 .request(APPLICATION_JSON)
@@ -52,12 +53,16 @@ class Client(val key: String) {
                         .request(APPLICATION_JSON)
                         .post(null)
             } catch (ex: ProcessingException) {
-                println(ex.message)
+                println("ProcessingException: ${ex.message}")
+                failures += 1
+                if (failures >= 5) break
                 continue
             }
 
             if (response.status != 200) {
-                println(response.readEntity(String::class.java))
+                println("Non-200 Response: ${response.readEntity(String::class.java)}")
+                failures += 1
+                if (failures >= 5) break
                 continue
             }
 
