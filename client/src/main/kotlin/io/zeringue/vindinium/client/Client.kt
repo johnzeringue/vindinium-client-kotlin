@@ -23,7 +23,7 @@ class Client(val key: String) {
     private fun markHeroAsCrashed(data: Data): Data {
         return data.copy(
                 game = data.game.copy(heroes = data.game.heroes.map {
-                    if (it.id == data.hero.id) it.copy(crashed = true); it
+                    if (it.id == data.hero.id) it.copy(crashed = true) else it
                 }),
                 hero = data.hero.copy(crashed = true))
     }
