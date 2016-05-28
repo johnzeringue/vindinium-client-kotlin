@@ -1,5 +1,6 @@
 package io.zeringue.vindinium.client
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty as Key
 
 data class Position(
@@ -11,6 +12,7 @@ data class Position(
     fun east() = this.copy(x = x + 1)
     fun west() = this.copy(x = x - 1)
 
+    @get:JsonIgnore
     val neighbors by lazy {
         listOf(north(), south(), east(), west())
     }

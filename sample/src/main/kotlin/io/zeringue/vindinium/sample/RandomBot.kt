@@ -1,8 +1,8 @@
 package io.zeringue.vindinium.sample
 
 import io.zeringue.vindinium.client.Bot
-import io.zeringue.vindinium.client.Bot.Companion.MOVES
 import io.zeringue.vindinium.client.Data
+import io.zeringue.vindinium.client.Move
 import java.awt.Desktop.getDesktop
 import java.net.URI
 
@@ -11,16 +11,16 @@ import java.net.URI
  */
 class RandomBot : Bot {
 
-    private fun <T> List<T>.random(): T {
+    private fun <T> Array<T>.random(): T {
         return get((Math.random() * size).toInt())
     }
 
-    override fun move(data: Data): String {
+    override fun move(data: Data): Move {
         if (data.game.turn == 0) {
             Thread { getDesktop().browse(URI(data.viewUrl)) }.start()
         }
 
-        return MOVES.random()
+        return Move.values().random()
     }
 
 }

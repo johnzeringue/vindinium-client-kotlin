@@ -8,7 +8,7 @@ data class Hero(
         @Key("userId") val userId: String?,
         @Key("elo") val elo: Int,
         @Key("pos") val pos: Position,
-        @Key("lastDir") val lastDir: String?,
+        @Key("lastDir") val lastDir: Move?,
         @Key("life") val life: Int,
         @Key("gold") val gold: Int,
         @Key("mineCount") val mineCount: Int,
