@@ -12,10 +12,6 @@ import javax.ws.rs.core.MediaType.APPLICATION_JSON
  */
 class Client(val key: String) {
 
-    private companion object {
-        val TIME_OUT_BODY = "Vindinium - Time out! You must play faster"
-    }
-
     private val client = ClientBuilder
             .newClient()
             .register(ObjectMapperProvider::class.java)
@@ -43,14 +39,12 @@ class Client(val key: String) {
      */
     fun play(bot: Bot, url: String): Data {
         val initialTarget = target(url)
-        var failures = 0
 
         var response = initialTarget
                 .request(APPLICATION_JSON)
                 .post(null)
 
         var data = response.readEntity(Data::class.java)
-
         var moveTarget = target(data.playUrl)
 
         while (!data.game.finished) {
@@ -63,22 +57,13 @@ class Client(val key: String) {
                         .post(null)
             } catch (ex: ProcessingException) {
                 println("ProcessingException: ${ex.message}")
-                failures += 1
-                if (failures >= 5) break
-                continue
+                break
             }
 
             if (response.status != 200) {
                 val responseBody = response.readEntity(String::class.java)
-
-                if (response.status == 400 && responseBody == TIME_OUT_BODY) {
-                    break
-                }
-
-                println("${response.status} Response: ${response.readEntity(String::class.java)}")
-                failures += 1
-                if (failures >= 5) break
-                continue
+                println("${response.status} Response: $responseBody")
+                break
             }
 
             data = response.readEntity(Data::class.java)
