@@ -1,7 +1,6 @@
 package io.zeringue.vindinium.client
 
 import org.glassfish.jersey.jackson.JacksonFeature
-import javax.ws.rs.ProcessingException
 import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
@@ -50,15 +49,10 @@ class Client(val key: String) {
         while (!data.game.finished) {
             val move = bot.move(data)
 
-            try {
-                response = moveTarget
-                        .queryParam("dir", serializeMove(move))
-                        .request(APPLICATION_JSON)
-                        .post(null)
-            } catch (ex: ProcessingException) {
-                println("ProcessingException: ${ex.message}")
-                break
-            }
+            response = moveTarget
+                    .queryParam("dir", serializeMove(move))
+                    .request(APPLICATION_JSON)
+                    .post(null)
 
             if (response.status != 200) {
                 val responseBody = response.readEntity(String::class.java)
