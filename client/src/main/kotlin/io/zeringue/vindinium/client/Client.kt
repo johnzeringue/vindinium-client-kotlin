@@ -1,5 +1,6 @@
 package io.zeringue.vindinium.client
 
+import org.glassfish.jersey.jackson.JacksonFeature
 import javax.ws.rs.ProcessingException
 import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -15,8 +16,12 @@ class Client(val key: String) {
         val TIME_OUT_BODY = "Vindinium - Time out! You must play faster"
     }
 
-    private fun target(url: String) = ClientBuilder
+    private val client = ClientBuilder
             .newClient()
+            .register(ObjectMapperProvider::class.java)
+            .register(JacksonFeature::class.java)
+
+    private fun target(url: String) = client
             .target(url)
             .queryParam("key", key)
 

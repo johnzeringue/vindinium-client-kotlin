@@ -1,10 +1,8 @@
 package io.zeringue.vindinium.client
 
-import com.fasterxml.jackson.annotation.JsonProperty as Key
-
 data class Board(
-        @Key("size") val size: Int,
-        @Key("tiles") val tiles: String) {
+        val size: Int,
+        val tiles: String) {
 
     operator fun contains(pos: Position): Boolean {
         return pos.run { x >= 0 && x < size && y >= 0 && y < size }

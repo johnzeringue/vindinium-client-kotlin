@@ -1,11 +1,9 @@
 package io.zeringue.vindinium.client
 
-import com.fasterxml.jackson.annotation.JsonProperty as Key
-
 data class Game(
-        @Key("id") val id: String,
-        @Key("turn") val turn: Int,
-        @Key("maxTurns") val maxTurns: Int,
-        @Key("heroes") val heroes: List<Hero>,
-        @Key("board") val board: Board,
-        @Key("finished") val finished: Boolean)
+        val id: String,
+        val turn: Int,
+        val maxTurns: Int,
+        val heroes: List<Hero>,
+        val board: Board,
+        val finished: Boolean)
