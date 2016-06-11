@@ -66,7 +66,7 @@ class Client(val key: String) {
 
             try {
                 response = moveTarget
-                        .queryParam("dir", move)
+                        .queryParam("dir", move.name.toLowerCase().capitalize())
                         .request(APPLICATION_JSON)
                         .post(null)
             } catch (ex: ProcessingException) {

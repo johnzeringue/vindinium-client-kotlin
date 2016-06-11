@@ -1,36 +1,58 @@
 package io.zeringue.vindinium.client
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.github.tomakehurst.wiremock.junit.WireMockRule
+import org.junit.ClassRule
+import spock.lang.Shared
 import spock.lang.Specification
 
-import static io.zeringue.vindinium.client.Move.SOUTH
+import static com.github.tomakehurst.wiremock.client.WireMock.*
 
-class DataSpec extends Specification {
+class ClientSpec extends Specification {
 
-    def objectMapper = new ObjectMapper().registerModule(new KotlinModule())
+    @Shared
+    @ClassRule
+    WireMockRule wireMockRule
 
-    def "data deserializes from sample JSON"() {
-        expect:
-        def data = objectMapper.readValue(sampleJson, Data)
+    def client = new Client("abc123")
 
-        data.game.id == "s2xh3aig"
-        data.hero.lastDir == SOUTH
-        data.token == "lte0"
-        data.viewUrl == "http://localhost:9000/s2xh3aig"
-        data.playUrl == "http://localhost:9000/api/s2xh3aig/lte0/play"
-    }
-
-    def "data serializes and deserializes into itself"() {
+    def "client starts game"() {
         given:
-        def data = objectMapper.readValue(sampleJson, Data)
+        stubFor(post(urlPathEqualTo("/api/arena"))
+                .willReturn(aResponse()
+                .withHeader("Content-Type", "application/json")
+                .withBody(sampleJson(finished: true))))
 
-        expect:
-        def serializedData = objectMapper.writeValueAsString(data)
-        objectMapper.readValue(serializedData, Data) == data
+        when:
+        client.play({ Move.STAY }, "http://localhost:8080/api/arena")
+
+        then:
+        verify(postRequestedFor(urlPathEqualTo("/api/arena"))
+                .withQueryParam("key", equalTo("abc123")))
     }
 
-    def sampleJson = """\
+    def "client sends bot move"() {
+        given:
+        stubFor(post(urlPathEqualTo("/api/arena"))
+                .willReturn(aResponse()
+                .withHeader("Content-Type", "application/json")
+                .withBody(sampleJson(finished: false))))
+
+        stubFor(post(urlPathEqualTo("/api/s2xh3aig/lte0/play"))
+                .willReturn((aResponse()
+                .withHeader("Content-Type", "application/json")
+                .withBody(sampleJson(finished: true)))))
+
+        when:
+        client.play({ Move.STAY }, "http://localhost:8080/api/arena")
+
+        then:
+        verify(postRequestedFor(urlPathEqualTo("/api/s2xh3aig/lte0/play"))
+                .withQueryParam("key", equalTo("abc123"))
+                .withQueryParam("dir", equalTo("Stay")))
+    }
+
+    def sampleJson(args) {
+        return """\
 {
    "game":{
       "id":"s2xh3aig",
@@ -115,7 +137,7 @@ class DataSpec extends Specification {
          "size":18,
          "tiles":"##############        ############################        ##############################    ##############################\$4    \$4############################  @4    ########################  @1##    ##    ####################  []        []  ##################        ####        ####################  \$4####\$4  ########################  \$4####\$4  ####################        ####        ##################  []        []  ####################  @2##    ##@3  ########################        ############################\$-    \$-##############################    ##############################        ############################        ##############"
       },
-      "finished":true
+      "finished":$args.finished
    },
    "hero":{
       "id":4,
@@ -137,9 +159,10 @@ class DataSpec extends Specification {
       "crashed":false
    },
    "token":"lte0",
-   "viewUrl":"http://localhost:9000/s2xh3aig",
-   "playUrl":"http://localhost:9000/api/s2xh3aig/lte0/play"
+   "viewUrl":"http://localhost:8080/s2xh3aig",
+   "playUrl":"http://localhost:8080/api/s2xh3aig/lte0/play"
 }
 """
+    }
 
 }

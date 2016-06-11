@@ -7,7 +7,9 @@ import javax.ws.rs.ext.Provider
 
 @Provider
 class ObjectMapperProvider : ContextResolver<ObjectMapper> {
+
     override fun getContext(type: Class<*>): ObjectMapper {
         return ObjectMapper().registerKotlinModule()
     }
+
 }
