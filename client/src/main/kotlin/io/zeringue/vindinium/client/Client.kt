@@ -54,12 +54,7 @@ class Client(val key: String) {
                     .request(APPLICATION_JSON)
                     .post(null)
 
-            if (response.status != 200) {
-                val responseBody = response.readEntity(String::class.java)
-                println("${response.status} Response: $responseBody")
-                break
-            }
-
+            if (response.status == 400) break
             data = response.readEntity(Data::class.java)
         }
 
