@@ -4,8 +4,10 @@ data class Board(
         val size: Int,
         val tiles: String) {
 
-    operator fun contains(pos: Position): Boolean {
-        return pos.run { x >= 0 && x < size && y >= 0 && y < size }
+    operator fun contains(pos: Position) = contains(pos.x, pos.y)
+
+    fun contains(x: Int, y: Int): Boolean {
+        return x >= 0 && x < size && y >= 0 && y < size
     }
 
     operator fun get(pos: Position) = get(pos.x, pos.y)
