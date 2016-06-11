@@ -37,9 +37,7 @@ class Client(val key: String) {
      * @return the final game state
      */
     fun play(bot: Bot, url: String): Data {
-        val initialTarget = target(url)
-
-        var response = initialTarget
+        var response = target(url)
                 .request(APPLICATION_JSON)
                 .post(null)
 
