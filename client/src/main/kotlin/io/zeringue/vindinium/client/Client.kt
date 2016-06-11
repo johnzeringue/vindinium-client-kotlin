@@ -16,10 +16,6 @@ class Client(val key: String) {
             .register(ObjectMapperProvider::class.java)
             .register(JacksonFeature::class.java)
 
-    private fun target(url: String) = client
-            .target(url)
-            .queryParam("key", key)
-
     /**
      * Start and play a game on the official server.
      *
@@ -29,6 +25,10 @@ class Client(val key: String) {
      */
     fun play(bot: Bot, mode: Mode) = play(bot, mode.url)
 
+    private fun target(url: String) = client
+            .target(url)
+            .queryParam("key", key)
+
     /**
      * Start and play a game.
      *
@@ -37,23 +37,23 @@ class Client(val key: String) {
      * @return the final game state
      */
     fun play(bot: Bot, url: String): Data {
-        var response = target(url)
+        val gameResponse = target(url)
                 .request(APPLICATION_JSON)
                 .post(null)
 
-        var data = response.readEntity(Data::class.java)
-        var moveTarget = target(data.playUrl)
+        var data = gameResponse.readEntity(Data::class.java)
+        val moveTarget = target(data.playUrl)
 
         while (!data.game.finished) {
             val move = bot.move(data)
 
-            response = moveTarget
+            val moveResponse = moveTarget
                     .queryParam("dir", serializeMove(move))
                     .request(APPLICATION_JSON)
                     .post(null)
 
-            if (response.status == 400) break
-            data = response.readEntity(Data::class.java)
+            if (moveResponse.status == 400) break
+            data = moveResponse.readEntity(Data::class.java)
         }
 
         return data
