@@ -14,7 +14,7 @@ internal class MoveSerializer : JsonSerializer<Move>() {
             gen: JsonGenerator,
             serializers: SerializerProvider) {
 
-        return gen.writeString(value.toString().toLowerCase().capitalize())
+        return gen.writeString(serializeMove(value))
     }
 
 }
