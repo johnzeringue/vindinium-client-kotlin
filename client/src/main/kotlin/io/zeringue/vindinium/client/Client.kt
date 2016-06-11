@@ -25,14 +25,6 @@ class Client(val key: String) {
             .target(url)
             .queryParam("key", key)
 
-    private fun markHeroAsCrashed(data: Data): Data {
-        return data.copy(
-                game = data.game.copy(heroes = data.game.heroes.map {
-                    if (it.id == data.hero.id) it.copy(crashed = true) else it
-                }),
-                hero = data.hero.copy(crashed = true))
-    }
-
     /**
      * Start and play a game on the official server.
      *
@@ -80,7 +72,6 @@ class Client(val key: String) {
                 val responseBody = response.readEntity(String::class.java)
 
                 if (response.status == 400 && responseBody == TIME_OUT_BODY) {
-                    data = markHeroAsCrashed(data)
                     break
                 }
 
