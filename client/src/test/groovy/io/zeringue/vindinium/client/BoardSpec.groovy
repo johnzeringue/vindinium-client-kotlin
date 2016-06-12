@@ -24,6 +24,26 @@ class BoardSpec extends Specification {
 ##############        ##############
 ##############        ##############""".replaceAll("\n", ""))
 
+    def "board has mines"() {
+        expect:
+        board.mines.size() == 8
+
+        new Position(3, 7) in board.mines
+        new Position(8, 7) in board.mines
+        new Position(9, 10) in board.mines
+        new Position(14, 10) in board.mines
+    }
+
+    def "board has taverns"() {
+        expect:
+        board.taverns.size() == 4
+
+        new Position(6, 6) in board.taverns
+        new Position(11, 6) in board.taverns
+        new Position(6, 11) in board.taverns
+        new Position(11, 11) in board.taverns
+    }
+
     def "board contains #pos is #value"(pos, value) {
         expect:
         board.contains(pos) == value

@@ -1,8 +1,30 @@
 package io.zeringue.vindinium.client
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+
 data class Board(
         val size: Int,
         val tiles: String) {
+
+    private fun lazyFind(matches: (String) -> Boolean) = lazy {
+        val result = mutableSetOf<Position>()
+
+        for (x in 0 until size) {
+            for (y in 0 until size) {
+                if (matches(get(x, y))) {
+                    result.add(Position(x, y))
+                }
+            }
+        }
+
+        result
+    }
+
+    @get:JsonIgnore
+    val mines: Set<Position> by lazyFind { it.startsWith("$") }
+
+    @get:JsonIgnore
+    val taverns: Set<Position> by lazyFind { it == "[]" }
 
     operator fun contains(pos: Position) = contains(pos.x, pos.y)
 
