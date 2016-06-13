@@ -6,10 +6,10 @@ data class Position(
         val x: Int,
         val y: Int) {
 
-    fun north() = this.copy(y = y - 1)
-    fun south() = this.copy(y = y + 1)
-    fun east() = this.copy(x = x + 1)
-    fun west() = this.copy(x = x - 1)
+    fun north() = this.copy(x = x - 1)
+    fun south() = this.copy(x = x + 1)
+    fun east() = this.copy(y = y + 1)
+    fun west() = this.copy(y = y - 1)
 
     @get:JsonIgnore
     val neighbors by lazy {
