@@ -6,7 +6,7 @@ data class Board(
         val size: Int,
         val tiles: String) {
 
-    private fun lazyFind(matches: (String) -> Boolean) = lazy {
+    private fun lazyFind(matches: (Tile) -> Boolean) = lazy {
         val result = mutableSetOf<Position>()
 
         for (x in 0 until size) {
@@ -21,10 +21,10 @@ data class Board(
     }
 
     @get:JsonIgnore
-    val mines: Set<Position> by lazyFind { it.startsWith("$") }
+    val mines: Set<Position> by lazyFind { it is Tile.Mine }
 
     @get:JsonIgnore
-    val taverns: Set<Position> by lazyFind { it == "[]" }
+    val taverns: Set<Position> by lazyFind { it is Tile.Tavern }
 
     operator fun contains(pos: Position) = contains(pos.x, pos.y)
 
@@ -34,9 +34,9 @@ data class Board(
 
     operator fun get(pos: Position) = get(pos.x, pos.y)
 
-    operator fun get(x: Int, y: Int): String {
+    operator fun get(x: Int, y: Int): Tile {
         return (x * size * 2 + y * 2).let {
-            tiles.substring(it, it + 2)
+            Tile.valueOf(tiles.substring(it, it + 2))
         }
     }
 

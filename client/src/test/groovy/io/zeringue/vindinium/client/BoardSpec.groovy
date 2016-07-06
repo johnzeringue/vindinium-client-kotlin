@@ -68,13 +68,13 @@ class BoardSpec extends Specification {
 
         where:
         pos                  | tile
-        new Position(0, 0)   | "##"
-        new Position(17, 0)  | "##"
-        new Position(0, 17)  | "##"
-        new Position(8, 7)   | "\$4"
-        new Position(17, 17) | "##"
-        new Position(6, 6)   | "[]"
-        new Position(6, 7)   | "  "
+        new Position(0, 0)   | new Tile.Wall()
+        new Position(17, 0)  | new Tile.Wall()
+        new Position(0, 17)  | new Tile.Wall()
+        new Position(8, 7)   | new Tile.Mine(4)
+        new Position(17, 17) | new Tile.Wall()
+        new Position(6, 6)   | new Tile.Tavern()
+        new Position(6, 7)   | new Tile.Air()
     }
 
 }
