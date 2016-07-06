@@ -25,13 +25,7 @@ sealed class Tile {
 
     }
 
-    object Air : Tile() {
-
-        override fun equals(other: Any?) = other is Air
-
-        override fun hashCode() = 0
-
-    }
+    object Air : Tile()
 
     class Mine(val owner: Int?) : Tile() {
 
@@ -43,20 +37,8 @@ sealed class Tile {
 
     }
 
-    object Tavern : Tile() {
+    object Tavern : Tile()
 
-        override fun equals(other: Any?) = other is Tile
-
-        override fun hashCode(): Int = 0
-
-    }
-
-    object Wall : Tile() {
-
-        override fun equals(other: Any?) = other is Wall
-
-        override fun hashCode() = 0
-
-    }
+    object Wall : Tile()
 
 }
