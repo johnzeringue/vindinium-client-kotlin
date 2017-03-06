@@ -52,7 +52,7 @@ class Client(val key: String) {
                     .request(APPLICATION_JSON)
                     .post(null)
 
-            if (moveResponse.status == 400) {
+            if (moveResponse.status != 200) {
                 throw RuntimeException("${moveResponse.status} ${moveResponse.readEntity(String::class.java)}")
             }
 
