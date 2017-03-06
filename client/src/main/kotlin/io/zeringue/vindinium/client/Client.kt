@@ -1,5 +1,7 @@
 package io.zeringue.vindinium.client
 
+import org.glassfish.jersey.client.ClientProperties.CONNECT_TIMEOUT
+import org.glassfish.jersey.client.ClientProperties.READ_TIMEOUT
 import org.glassfish.jersey.jackson.JacksonFeature
 import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -13,6 +15,8 @@ class Client(val key: String) {
 
     private val client = ClientBuilder
             .newClient()
+            .property(CONNECT_TIMEOUT, 5000)
+            .property(READ_TIMEOUT, 60000)
             .register(ObjectMapperProvider::class.java)
             .register(JacksonFeature::class.java)
 
